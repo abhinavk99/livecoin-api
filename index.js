@@ -20,6 +20,19 @@ class LiveCoin {
 
     this.baseUrl = 'https://api.livecoin.net';
     this.excBase = this.baseUrl + '/exchange';
+    this.payBase = this.baseUrl + '/payment';
+  }
+
+  /**
+   *  Set client's API key and secret after constructing the object
+   *  @param {string} apiKey - API key generated from LiveCoin
+   *  @param {string} apiSecret - API secret generated from LiveCoin
+   *  @example
+   *  client.login('key here', 'secret here');
+   */
+  login(apiKey, apiSecret) {
+    this.apiKey = apiKey;
+    this.apiSecret = apiSecret;
   }
 
   /**
@@ -158,6 +171,206 @@ class LiveCoin {
     return fetch(this.baseUrl + '/info/coinInfo').then(res => {
       return res.json();
     });
+  }
+
+  /**
+   *  Get information on user's recent trades, requires API key and secret
+   *  @param {Object=} options - options for the query
+   *  @param {string=} options.currencyPair - exchange in the format BTC/USD
+   *  @param {boolean=} options.orderDesc - if true, new orders will be shown first
+   *  @param {number=} options.limit - number of items per page
+   *  @param {number=} options.offset - page offset
+   *  @return {Object} information on user's trades
+   *  @example
+   *  client.getUserTrades({orderDesc: true, limit: 4}).then(console.log);
+   */
+  getUserTrades(options) {
+    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/trades?' + params, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get information on user's orders, requires API key and secret
+   *  @param {Object=} options - options for the query
+   *  @param {string=} options.currencyPair - exchange in the format BTC/USD
+   *  @param {string=} options.openClosed - type of order, e.g 'ALL' or 'OPEN'
+   *  @param {number=} options.issuedFrom - start date in UNIX format
+   *  @param {number=} options.issuedTo - end date in UNIX format
+   *  @param {number=} options.startRow - sequence number of first record
+   *  @param {number=} options.endRow - sequence number of last record
+   *  @return {Object} information on user's orders
+   *  @example
+   *  client.getClientOrders({openClosed: 'CANCELLED', startRow: 2}).then(console.log);
+   */
+  getClientOrders(options) {
+    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/client_orders?' + params, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get order information, requires API key and secret
+   *  @param {number} orderId - ID of the order, e.g. 88504958
+   *  @return {Object} order information
+   *  @example
+   *  client.getUserOrder(88504958).then(console.log).catch(console.error);
+   */
+  getUserOrder(orderId) {
+    var sign = CryptoJS.HmacSHA256('orderId=' + orderId, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/order?orderId=' + orderId, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get information on balances, requires API key and secret
+   *  @param {string=} currency - will return all balances if not given, e.g. USD
+   *  @return {Object[]} information on balances
+   *  @example
+   *  client.getBalances().then(console.log).catch(console.error);
+   */
+  getBalances(currency = '') {
+    var curr = currency.length > 0 ? 'currency=' + currency.toUpperCase() : '';
+    var sign = CryptoJS.HmacSHA256(curr, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.payBase + '/balances?currency=' + currency, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get information on balance for a currency, requires API key and secret
+   *  @param {string} currency - currency to get balance for, e.g. BTC
+   *  @return {Object} information on balances
+   *  @example
+   *  client.getBalance('BTC').then(console.log).catch(console.error);
+   */
+  getBalance(currency) {
+    currency = currency.toUpperCase();
+    var sign = CryptoJS.HmacSHA256(`currency=${currency}`, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.payBase + '/balance?currency=' + currency, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get list of transactions, requires API key and secret
+   *  @param {string} start - start date in UNIX format
+   *  @param {string} end - end date in UNIX format
+   *  @param {Object=} options - options for the query
+   *  @param {string=} options.types - type of order, e.g 'BUY' or 'DEPOSIT'
+   *  @param {number=} options.limit - max number of results
+   *  @param {number=} options.offset - first index
+   *  @return {Object[]} list of transactions in the date range
+   *  @example
+   *  client.getTransactions('1409920436000', '1409920636000', 
+   *  {types: 'BUY', limit: 2}).then(console.log).catch(console.error);
+   */
+  getTransactions(start, end, options) {
+    options.start = start;
+    options.end = end;
+    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.payBase + '/history/transactions?' + params, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get number of transactions, requires API key and secret
+   *  @param {string} start - start date in UNIX format
+   *  @param {string} end - end date in UNIX format
+   *  @param {string=} options.types - type of order, e.g 'BUY' or 'DEPOSIT'
+   *  @return {number} number of transactions in the date range
+   *  @example
+   *  client.getNumTransactions('1409920436000', '1409920636000', 'BUY').then(console.log);
+   */
+  getNumTransactions(start, end, types) {
+    var options = {start: start, end: end};
+    if (types) {
+      options.types = types;
+    }
+    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.payBase + '/history/size?' + params, {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get customer's trading fee
+   *  @return {Object} trading fee
+   *  @example
+   *  client.getTradingFee().then(console.log).catch(console.error);
+   */
+  getTradingFee() {
+    var sign = CryptoJS.HmacSHA256('', this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/commission', {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get customer's trading fee and volume
+   *  @return {Object} trading fee and volume
+   *  @example
+   *  client.getTradingFeeAndVolume().then(console.log).catch(console.error);
+   */
+  getTradingFeeAndVolume() {
+    var sign = CryptoJS.HmacSHA256('', this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/commissionCommonInfo', {
+      method: 'GET',
+      headers: {'API-key': this.apiKey, 'Sign': sign}
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Returns whether a comes before or after b alphabetically
+   *  @param {string=} a - first string
+   *  @param {string=} b - second string
+   *  @return {number} whether a comes before or after b
+   */
+  _alphabeticalSort(a, b) {
+    return a.localeCompare(b);
   }
 }
 

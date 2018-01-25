@@ -43,7 +43,6 @@ describe('#LiveCoin Public Data', function() {
     const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getAllTickers();
     expect(info).to.be.an('array');
-    expect(info).to.have.lengthOf(493);
   });
 
   it('should get last trades', async function() {
@@ -94,7 +93,6 @@ describe('#LiveCoin Public Data', function() {
     var info = await client.getAllBidsAndAsks();
     expect(info).to.be.an('object');
     expect(info['currencyPairs']).to.be.an('array');
-    expect(info['currencyPairs']).to.have.lengthOf(493);
     expect(info['currencyPairs'][0]).to.be.an('object');
     expect(info['currencyPairs'][0]['symbol']).to.equal('BNT/BTC');
     expect(info['currencyPairs'][0]['maxBid']).to.be.a('string');
@@ -106,7 +104,6 @@ describe('#LiveCoin Public Data', function() {
     var info = await client.getRestrictions();
     expect(info).to.be.an('object');
     expect(info['restrictions']).to.be.an('array');
-    expect(info['restrictions']).to.have.lengthOf(490);
     expect(info['restrictions'][0]).to.be.an('object');
     expect(info['restrictions'][0]['currencyPair']).to.equal('BTC/USD');
     expect(info['restrictions'][0]['minLimitQuantity']).to.be.a('number');
@@ -118,7 +115,6 @@ describe('#LiveCoin Public Data', function() {
     var info = await client.getCurrencies();
     expect(info).to.be.an('object');
     expect(info['info']).to.be.an('array');
-    expect(info['info']).to.have.lengthOf(194);
     expect(info['info'][0]).to.be.an('object');
     expect(info['info'][0]['name']).to.equal('Bitcoin');
     expect(info['info'][0]['symbol']).to.equal('BTC');

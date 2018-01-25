@@ -14,7 +14,7 @@ Currently only wraps the Public Data section of the LiveCoin API, the rest to co
 
 ```js
 const LiveCoin = require('livecoin-api');
-const client = new LiveCoin();
+const client = new LiveCoin('key here', 'secret here');
 
 client.getTicker('btc', 'usd').then(console.log).catch(console.error);
 client.getAllTickers().then(console.log).catch(console.error);
