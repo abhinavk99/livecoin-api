@@ -1,5 +1,6 @@
 'use strict';
 
+const Config = require('./testConfig.json');
 var expect = require('chai').expect;
 const LiveCoin = require('../index');
 
@@ -9,7 +10,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should return LiveCoin client', function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     expect(client.getTicker).to.exist;
     expect(client.getAllTickers).to.exist;
     expect(client.getLastTrades).to.exist;
@@ -22,7 +23,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get ticker info', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getTicker('btc', 'usd');
     expect(info).to.be.an('object');
     expect(info['cur']).to.equal('BTC');
@@ -39,14 +40,14 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get all ticker info', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getAllTickers();
     expect(info).to.be.an('array');
     expect(info).to.have.lengthOf(493);
   });
 
   it('should get last trades', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getLastTrades('btc', 'usd', {
       minOrHr: true, 
       type: "BUY"
@@ -55,7 +56,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get orders for a ticker', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getOrders('btc', 'usd', {
       groupByPrice: true, 
       depth: 4
@@ -68,7 +69,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get orders for all tickers', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getAllOrders({
       groupByPrice: true, 
       depth: 4
@@ -77,7 +78,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get max bid and min ask', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getBidAndAsk('btc', 'usd');
     expect(info).to.be.an('object');
     expect(info['currencyPairs']).to.be.an('array');
@@ -89,7 +90,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get all max bids and min asks', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getAllBidsAndAsks();
     expect(info).to.be.an('object');
     expect(info['currencyPairs']).to.be.an('array');
@@ -101,7 +102,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get minimum order restrictions', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getRestrictions();
     expect(info).to.be.an('object');
     expect(info['restrictions']).to.be.an('array');
@@ -113,7 +114,7 @@ describe('#LiveCoin Public Data', function() {
   });
 
   it('should get information on currencies', async function() {
-    const client = new LiveCoin();
+    const client = new LiveCoin(Config.key, Config.secret);
     var info = await client.getCurrencies();
     expect(info).to.be.an('object');
     expect(info['info']).to.be.an('array');

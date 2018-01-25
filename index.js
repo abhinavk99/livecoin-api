@@ -2,16 +2,22 @@
 
 const fetch = require('node-fetch');
 const qs = require('qs');
+const CryptoJS = require("crypto-js");
 
 /** Class representing LiveCoin client */
 class LiveCoin {
 
   /**
-   *  Creates an instance of LiveCoin
+   *  Creates an instance of LiveCoin (Key and secret needed if using private section API calls)
+   *  @param {string=} apiKey - API key generated from LiveCoin
+   *  @param {string=} apiSecret - API secret generated from LiveCoin
    *  @example
-   *  const client = new LiveCoin();
+   *  const client = new LiveCoin('key here', 'secret here');
    */
-  constructor() {
+  constructor(apiKey = '', apiSecret = '') {
+    this.apiKey = apiKey;
+    this.apiSecret = apiSecret;
+
     this.baseUrl = 'https://api.livecoin.net';
     this.excBase = this.baseUrl + '/exchange';
   }
@@ -23,7 +29,6 @@ class LiveCoin {
    *  @return {Object} ticker information
    *  @example
    *  client.getTicker('btc', 'usd').then(console.log).catch(console.error);
-   *  client.getTicker('eth', 'btc').then(console.log).catch(console.error);
    */
   getTicker(ticker, pair) {
     // Converts ticker to currency pair string needed for API call
@@ -38,7 +43,6 @@ class LiveCoin {
    *  Get all tickers' information
    *  @return {Object} all tickers' information
    *  @example
-   *  const client = new LiveCoin();
    *  client.getAllTickers().then(console.log).catch(console.error);
    */
   getAllTickers() {
@@ -148,7 +152,7 @@ class LiveCoin {
    *  Get minimum amount to open order for all currencies
    *  @return {Object} minimum amount to open order for all currencies
    *  @example
-   *  client.getRestrictions().then(console.log).catch(console.error);
+   *  client.getCurrencies().then(console.log).catch(console.error);
    */
   getCurrencies() {
     return fetch(this.baseUrl + '/info/coinInfo').then(res => {

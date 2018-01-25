@@ -48,6 +48,11 @@ See examples.js for more examples.
 
 Class representing LiveCoin client
 
+**Parameters**
+
+-   `apiKey`   (optional, default `''`)
+-   `apiSecret`   (optional, default `''`)
+
 #### getTicker
 
 Get ticker information
@@ -61,7 +66,6 @@ Get ticker information
 
 ```javascript
 client.getTicker('btc', 'usd').then(console.log).catch(console.error);
- client.getTicker('eth', 'btc').then(console.log).catch(console.error);
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** ticker information
@@ -73,8 +77,7 @@ Get all tickers' information
 **Examples**
 
 ```javascript
-const client = new LiveCoin();
- client.getAllTickers().then(console.log).catch(console.error);
+client.getAllTickers().then(console.log).catch(console.error);
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** all tickers' information
@@ -188,7 +191,7 @@ Get minimum amount to open order for all currencies
 **Examples**
 
 ```javascript
-client.getRestrictions().then(console.log).catch(console.error);
+client.getCurrencies().then(console.log).catch(console.error);
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** minimum amount to open order for all currencies
