@@ -69,3 +69,20 @@ client.getNumTransactions('1409920436000', '1409920636000', 'BUY')
 client.getTradingFee().then(console.log).catch(console.error);
 
 client.getTradingFeeAndVolume().then(console.log).catch(console.error);
+
+// Open/cancel Orders API calls
+
+client.buyLimit('btc', 'usd', 10000, 0.1)
+.then(console.log).catch(console.error);
+
+client.sellLimit('btc', 'usd', 10000, 0.1)
+.then(console.log).catch(console.error);
+
+client.buyMarket('btc', 'usd', 0.1)
+.then(console.log).catch(console.error);
+
+client.sellMarket('btc', 'usd', 0.1)
+.then(console.log).catch(console.error);
+
+client.cancelLimit('btc', 'usd', 1111)
+.then(console.log).catch(console.error);

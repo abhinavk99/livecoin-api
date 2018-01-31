@@ -364,6 +364,145 @@ class LiveCoin {
   }
 
   /**
+   *  Make a buy limit order
+   *  @param {string} ticker - currency ticker
+   *  @param {string} pair - currency being traded with
+   *  @param {number} price - price of currency
+   *  @param {number} quantity - amount of currency to buy
+   *  @return {Object} order ID
+   *  @example
+   *  client.buyLimit('btc', 'usd', 10000, 0.1).then(console.log);
+   */
+  buyLimit(ticker, pair, price, quantity) {
+    var currencyPair = (ticker + '/' + pair).toUpperCase();
+    var params = `currencyPair=${currencyPair}&price=${price}` 
+      + `&quantity=${quantity}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/buylimit?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Make a sell limit order
+   *  @param {string} ticker - currency ticker
+   *  @param {string} pair - currency being traded with
+   *  @param {number} price - price of currency
+   *  @param {number} quantity - amount of currency to sell
+   *  @return {Object} order ID
+   *  @example
+   *  client.sellLimit('btc', 'usd', 10000, 0.1).then(console.log);
+   */
+  sellLimit(ticker, pair, price, quantity) {
+    var currencyPair = (ticker + '/' + pair).toUpperCase();
+    var params = `currencyPair=${currencyPair}&price=${price}` 
+      + `&quantity=${quantity}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/selllimit?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Make a buy market order
+   *  @param {string} ticker - currency ticker
+   *  @param {string} pair - currency being traded with
+   *  @param {number} quantity - amount of currency to buy
+   *  @return {Object} order ID
+   *  @example
+   *  client.buyMarket('btc', 'usd', 0.1).then(console.log);
+   */
+  buyMarket(ticker, pair, quantity) {
+    var currencyPair = (ticker + '/' + pair).toUpperCase();
+    var params = `currencyPair=${currencyPair}&quantity=${quantity}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/buymarket?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Make a sell market order
+   *  @param {string} ticker - currency ticker
+   *  @param {string} pair - currency being traded with
+   *  @param {number} quantity - amount of currency to sell
+   *  @return {Object} order ID
+   *  @example
+   *  client.sellMarket('btc', 'usd', 0.1).then(console.log);
+   */
+  sellMarket(ticker, pair, quantity) {
+    var currencyPair = (ticker + '/' + pair).toUpperCase();
+    var params = `currencyPair=${currencyPair}&quantity=${quantity}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/sellmarket?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Cancel order
+   *  @param {string} ticker - currency ticker
+   *  @param {string} pair - currency being traded with
+   *  @param {number} orderId - ID of order to cancel
+   *  @return {Object} order ID
+   *  @example
+   *  client.cancelLimit('btc', 'usd', 1111).then(console.log);
+   */
+  cancelLimit(ticker, pair, orderId) {
+    var currencyPair = (ticker + '/' + pair).toUpperCase();
+    var params = `currencyPair=${currencyPair}&orderId=${orderId}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.excBase + '/cancellimit?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
    *  Returns whether a comes before or after b alphabetically
    *  @param {string=} a - first string
    *  @param {string=} b - second string
