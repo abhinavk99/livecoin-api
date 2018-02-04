@@ -21,6 +21,7 @@ class LiveCoin {
     this.baseUrl = 'https://api.livecoin.net';
     this.excBase = this.baseUrl + '/exchange';
     this.payBase = this.baseUrl + '/payment';
+    this.outBase = this.payBase + '/out';
   }
 
   /**
@@ -185,7 +186,7 @@ class LiveCoin {
    *  client.getUserTrades({orderDesc: true, limit: 4}).then(console.log);
    */
   getUserTrades(options) {
-    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var params = options ? this._getParamString(options) : '';
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
                 .toString(CryptoJS.enc.Hex).toUpperCase();
     return fetch(this.excBase + '/trades?' + params, {
@@ -210,7 +211,7 @@ class LiveCoin {
    *  client.getClientOrders({openClosed: 'CANCELLED', startRow: 2}).then(console.log);
    */
   getClientOrders(options) {
-    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var params = options ? this._getParamString(options) : '';
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
                 .toString(CryptoJS.enc.Hex).toUpperCase();
     return fetch(this.excBase + '/client_orders?' + params, {
@@ -293,7 +294,7 @@ class LiveCoin {
   getTransactions(start, end, options) {
     options.start = start;
     options.end = end;
-    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var params = options ? this._getParamString(options) : '';
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
                 .toString(CryptoJS.enc.Hex).toUpperCase();
     return fetch(this.payBase + '/history/transactions?' + params, {
@@ -318,7 +319,7 @@ class LiveCoin {
     if (types) {
       options.types = types;
     }
-    var params = options ? qs.stringify(options, {sort: this._alphabeticalSort}) : '';
+    var params = options ? this._getParamString(options) : '';
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
                 .toString(CryptoJS.enc.Hex).toUpperCase();
     return fetch(this.payBase + '/history/size?' + params, {
@@ -503,6 +504,91 @@ class LiveCoin {
   }
 
   /**
+   *  Get wallet address for a currency
+   *  @param {string} ticker - currency ticker
+   *  @return {Object} wallet address
+   *  @example
+   *  client.getAddress('btc').then(console.log);
+   */
+  getAddress(ticker) {
+    var params = `currency=${ticker.toUpperCase()}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.payBase + '/get/address?' + params, {
+      method: 'GET',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to wallet address
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} ticker - currency ticker
+   *  @param {string} wallet - wallet address
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.withdraw(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+   *  .then(console.log);
+   */
+  withdraw(amount, ticker, wallet) {
+    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`
+      + `wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/coin?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to Payeer account
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} ticker - currency ticker
+   *  @param {string} wallet - wallet address
+   *  @param {Object} options - options object
+   *  @param {string} options.protect - protection of payment
+   *  @param {string} options.protect_code - protect code
+   *  @param {number} protect_period - protect period in days
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.payeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+   *  .then(console.log);
+   */
+  payeer(amount, ticker, wallet, options) {
+    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
+    params += options ? `&${this._getParamString(options)}` : '';
+    params += `&wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/coin?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
    *  Returns whether a comes before or after b alphabetically
    *  @param {string=} a - first string
    *  @param {string=} b - second string
@@ -510,6 +596,13 @@ class LiveCoin {
    */
   _alphabeticalSort(a, b) {
     return a.localeCompare(b);
+  }
+
+  /**
+   *  Return sorted parameter query strong for options object
+   */
+  _getParamString(options) {
+    return qs.stringify(options, {sort: this._alphabeticalSort});
   }
 }
 

@@ -86,3 +86,16 @@ client.sellMarket('btc', 'usd', 0.1)
 
 client.cancelLimit('btc', 'usd', 1111)
 .then(console.log).catch(console.error);
+
+// Deposit and Withdrawal API calls
+
+client.getAddress('btc')
+.then(console.log).catch(console.error);
+
+client.withdraw(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+.then(console.log).catch(console.error);
+
+client.payeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG', {
+  protect: 1,
+  protect_period: 3
+}).then(console.log).catch(console.error);
