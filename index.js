@@ -22,6 +22,7 @@ class LiveCoin {
     this.excBase = this.baseUrl + '/exchange';
     this.payBase = this.baseUrl + '/payment';
     this.outBase = this.payBase + '/out';
+    this.vouBase = this.payBase + '/voucher';
   }
 
   /**
@@ -560,22 +561,249 @@ class LiveCoin {
    *  @param {number} amount - amount to withdraw
    *  @param {string} ticker - currency ticker
    *  @param {string} wallet - wallet address
-   *  @param {Object} options - options object
-   *  @param {string} options.protect - protection of payment
-   *  @param {string} options.protect_code - protect code
-   *  @param {number} protect_period - protect period in days
+   *  @param {Object=} options - options object
+   *  @param {string=} options.protect - protection of payment
+   *  @param {string=} options.protect_code - protect code
+   *  @param {number=} options.protect_period - protect period in days
    *  @return {Object} information on withdrawal
    *  @example
-   *  client.payeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+   *  client.toPayeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
    *  .then(console.log);
    */
-  payeer(amount, ticker, wallet, options) {
+  toPayeer(amount, ticker, wallet, options) {
     var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
     params += options ? `&${this._getParamString(options)}` : '';
     params += `&wallet=${wallet}`;
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
                 .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/coin?' + params, {
+    return fetch(this.outBase + '/payeer?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to Capitalist account
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be USD, EUR, or RUR only
+   *  @param {string} wallet - wallet address
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toCapitalist(1, 'USD', 'U0000001')
+   *  .then(console.log);
+   */
+  toCapitalist(amount, currency, wallet) {
+    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
+    params += `&wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/capitalist?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to Advcash account
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be USD, EUR, or RUR only
+   *  @param {string} wallet - wallet address
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toAdvcash(1, 'USD', 'U123456789012')
+   *  .then(console.log);
+   */
+  toAdvcash(amount, currency, wallet) {
+    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
+    params += `&wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/advcah?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to bank card
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be USD, EUR, or RUR only
+   *  @param {number} cardNumber - bank card number
+   *  @param {string} expiryMonth - '01' to '12'
+   *  @param {string} expiryYear - last 2 digits, e.g. '18'
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toBankCard(1, 'USD', '5567025017512543', '09', '18')
+   *  .then(console.log);
+   */
+  toBankCard(amount, currency, cardNumber, expiryMonth, expiryYear) {
+    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
+    params += `&card_number=${cardNumber}&expiry_month=${expiryMonth}`;
+    params += `&expiry_year=${expiryYear}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/card?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to Okpay card
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be USD, EUR, or RUR only
+   *  @param {string} wallet - account wallet
+   *  @param {number=} invoice - optional invoice number
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toOkpay(1, 'USD', 'OK123456789')
+   *  .then(console.log);
+   */
+  toOkpay(amount, currency, wallet, invoice = '') {
+    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
+    params += invoice == '' ? '' : `&invoice=${invoice}`;
+    params += `&wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/okpay?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Withdraw to PerfectMoney account
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} ticker - currency ticker
+   *  @param {string} wallet - wallet address
+   *  @param {Object=} options - options object
+   *  @param {string=} options.protect_code - protect code
+   *  @param {number=} options.protect_period - protect period in days
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toPerfectMoney(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+   *  .then(console.log);
+   */
+  toPerfectMoney(amount, ticker, wallet, options) {
+    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
+    params += options ? `&${this._getParamString(options)}` : '';
+    params += `&wallet=${wallet}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.outBase + '/perfectmoney?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Creates a voucher
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} ticker - currency ticker
+   *  @param {string=} description - purpose of payment
+   *  @return {string} voucher code
+   *  @example
+   *  client.makeVoucher(1, 'usd', 'need a voucher')
+   *  .then(console.log);
+   */
+  makeVoucher(amount, ticker, description = '') {
+    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
+    params += `&description=${description}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.vouBase + '/make?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Get voucher amount from voucher code
+   *  @param {string} voucherCode - voucher code
+   *  @return {string} voucher amount
+   *  @example
+   *  client.getVoucherAmount('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
+   *  .then(console.log);
+   */
+  getVoucherAmount(voucherCode) {
+    var params = `voucher_code=${voucherCode}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.vouBase + '/amount?' + params, {
+      method: 'POST',
+      headers: {
+        'API-key': this.apiKey,
+        'Sign': sign,
+        'Content-type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+    }).then(res => {
+      return res.json();
+    });
+  }
+
+  /**
+   *  Redeem voucher from code
+   *  @param {string} voucherCode - voucher code
+   *  @return {Object} information on voucher redeeming
+   *  @example
+   *  client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
+   *  .then(console.log);
+   */
+  redeemVoucher(voucherCode) {
+    var params = `voucher_code=${voucherCode}`;
+    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
+                .toString(CryptoJS.enc.Hex).toUpperCase();
+    return fetch(this.vouBase + '/redeem?' + params, {
       method: 'POST',
       headers: {
         'API-key': this.apiKey,

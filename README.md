@@ -4,8 +4,6 @@ Simple LiveCoin API wrapper for Node.js
 
 LiveCoin API documentation can be found at <https://www.livecoin.net/api/common>
 
-Currently only wraps the Public Data section of the LiveCoin API, the rest to come soon!
-
 ## Installation
 
   `npm install livecoin-api`
@@ -58,7 +56,19 @@ See examples.js for more examples.
     -   [buyMarket](#buymarket)
     -   [sellMarket](#sellmarket)
     -   [cancelLimit](#cancellimit)
+    -   [getAddress](#getaddress)
+    -   [withdraw](#withdraw)
+    -   [toPayeer](#topayeer)
+    -   [toCapitalist](#tocapitalist)
+    -   [toAdvcash](#toadvcash)
+    -   [toBankCard](#tobankcard)
+    -   [toOkpay](#tookpay)
+    -   [toPerfectMoney](#toperfectmoney)
+    -   [makeVoucher](#makevoucher)
+    -   [getVoucherAmount](#getvoucheramount)
+    -   [redeemVoucher](#redeemvoucher)
     -   [\_alphabeticalSort](#_alphabeticalsort)
+    -   [\_getParamString](#_getparamstring)
 
 ### LiveCoin
 
@@ -473,6 +483,218 @@ client.cancelLimit('btc', 'usd', 1111).then(console.log);
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** order ID
 
+#### getAddress
+
+Get wallet address for a currency
+
+**Parameters**
+
+-   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
+
+**Examples**
+
+```javascript
+client.getAddress('btc').then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** wallet address
+
+#### withdraw
+
+Withdraw to wallet address
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+
+**Examples**
+
+```javascript
+client.withdraw(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toPayeer
+
+Withdraw to Payeer account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object
+    -   `options.protect` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protection of payment
+    -   `options.protect_code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protect code
+    -   `options.protect_period` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** protect period in days
+
+**Examples**
+
+```javascript
+client.toPayeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toCapitalist
+
+Withdraw to Capitalist account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD, EUR, or RUR only
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+
+**Examples**
+
+```javascript
+client.toCapitalist(1, 'USD', 'U0000001')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toAdvcash
+
+Withdraw to Advcash account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD, EUR, or RUR only
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+
+**Examples**
+
+```javascript
+client.toAdvcash(1, 'USD', 'U123456789012')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toBankCard
+
+Withdraw to bank card
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD, EUR, or RUR only
+-   `cardNumber` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** bank card number
+-   `expiryMonth` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** '01' to '12'
+-   `expiryYear` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** last 2 digits, e.g. '18'
+
+**Examples**
+
+```javascript
+client.toBankCard(1, 'USD', '5567025017512543', '09', '18')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toOkpay
+
+Withdraw to Okpay card
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD, EUR, or RUR only
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** account wallet
+-   `invoice` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** optional invoice number (optional, default `''`)
+
+**Examples**
+
+```javascript
+client.toOkpay(1, 'USD', 'OK123456789')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toPerfectMoney
+
+Withdraw to PerfectMoney account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object
+    -   `options.protect_code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protect code
+    -   `options.protect_period` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** protect period in days
+
+**Examples**
+
+```javascript
+client.toPerfectMoney(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### makeVoucher
+
+Creates a voucher
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
+-   `description` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** purpose of payment (optional, default `''`)
+
+**Examples**
+
+```javascript
+client.makeVoucher(1, 'usd', 'need a voucher')
+ .then(console.log);
+```
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** voucher code
+
+#### getVoucherAmount
+
+Get voucher amount from voucher code
+
+**Parameters**
+
+-   `voucherCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** voucher code
+
+**Examples**
+
+```javascript
+client.getVoucherAmount('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
+ .then(console.log);
+```
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** voucher amount
+
+#### redeemVoucher
+
+Redeem voucher from code
+
+**Parameters**
+
+-   `voucherCode` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** voucher code
+
+**Examples**
+
+```javascript
+client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on voucher redeeming
+
 #### \_alphabeticalSort
 
 Returns whether a comes before or after b alphabetically
@@ -483,6 +705,14 @@ Returns whether a comes before or after b alphabetically
 -   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** second string
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** whether a comes before or after b
+
+#### \_getParamString
+
+Return sorted parameter query strong for options object
+
+**Parameters**
+
+-   `options`  
 
 ## Contributing
 

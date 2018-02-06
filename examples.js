@@ -95,7 +95,7 @@ client.getAddress('btc')
 client.withdraw(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 .then(console.log).catch(console.error);
 
-client.payeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG', {
+client.toPayeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG', {
   protect: 1,
   protect_period: 3
 }).then(console.log).catch(console.error);
