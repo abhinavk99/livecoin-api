@@ -4,8 +4,11 @@ const fetch = require('node-fetch');
 const qs = require('qs');
 const CryptoJS = require('crypto-js');
 
+// Importing the sub-modules
 const PublicData = require('./publicData');
 const publicClient = new PublicData();
+const PrivateData = require('./privateData');
+const privateClient = new PrivateData();
 
 /** Class representing LiveCoin client */
 class LiveCoin {
@@ -20,6 +23,7 @@ class LiveCoin {
   constructor(apiKey = '', apiSecret = '') {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
+    privateClient.login(this.apiKey, this.apiSecret);
 
     this.baseUrl = 'https://api.livecoin.net';
     this.excBase = this.baseUrl + '/exchange';
@@ -38,6 +42,7 @@ class LiveCoin {
   login(apiKey, apiSecret) {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
+    privateClient.login(this.apiKey, this.apiSecret);
   }
 
   /**
@@ -162,15 +167,7 @@ class LiveCoin {
    *  client.getUserTrades({orderDesc: true, limit: 4}).then(console.log);
    */
   getUserTrades(options) {
-    var params = options ? this._getParamString(options) : '';
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/trades?' + params, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getUserTrades();
   }
 
   /**
@@ -187,15 +184,7 @@ class LiveCoin {
    *  client.getClientOrders({openClosed: 'CANCELLED', startRow: 2}).then(console.log);
    */
   getClientOrders(options) {
-    var params = options ? this._getParamString(options) : '';
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/client_orders?' + params, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getClientOrders(options);
   }
 
   /**
@@ -206,14 +195,7 @@ class LiveCoin {
    *  client.getUserOrder(88504958).then(console.log).catch(console.error);
    */
   getUserOrder(orderId) {
-    var sign = CryptoJS.HmacSHA256('orderId=' + orderId, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/order?orderId=' + orderId, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getUserOrder(orderId);
   }
 
   /**
@@ -224,15 +206,7 @@ class LiveCoin {
    *  client.getBalances().then(console.log).catch(console.error);
    */
   getBalances(currency = '') {
-    var curr = currency.length > 0 ? 'currency=' + currency.toUpperCase() : '';
-    var sign = CryptoJS.HmacSHA256(curr, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/balances?currency=' + currency, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getBalances(currency);
   }
 
   /**
@@ -243,15 +217,7 @@ class LiveCoin {
    *  client.getBalance('BTC').then(console.log).catch(console.error);
    */
   getBalance(currency) {
-    currency = currency.toUpperCase();
-    var sign = CryptoJS.HmacSHA256(`currency=${currency}`, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/balance?currency=' + currency, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getBalance(currency);
   }
 
   /**
@@ -268,17 +234,7 @@ class LiveCoin {
    *  {types: 'BUY', limit: 2}).then(console.log).catch(console.error);
    */
   getTransactions(start, end, options) {
-    options.start = start;
-    options.end = end;
-    var params = options ? this._getParamString(options) : '';
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/history/transactions?' + params, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getTransactions(start, end, options);
   }
 
   /**
@@ -291,19 +247,7 @@ class LiveCoin {
    *  client.getNumTransactions('1409920436000', '1409920636000', 'BUY').then(console.log);
    */
   getNumTransactions(start, end, types) {
-    var options = {start: start, end: end};
-    if (types) {
-      options.types = types;
-    }
-    var params = options ? this._getParamString(options) : '';
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/history/size?' + params, {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getNumTransactions(start, end, types);
   }
 
   /**
@@ -313,14 +257,7 @@ class LiveCoin {
    *  client.getTradingFee().then(console.log).catch(console.error);
    */
   getTradingFee() {
-    var sign = CryptoJS.HmacSHA256('', this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/commission', {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getTradingFee();
   }
 
   /**
@@ -330,14 +267,7 @@ class LiveCoin {
    *  client.getTradingFeeAndVolume().then(console.log).catch(console.error);
    */
   getTradingFeeAndVolume() {
-    var sign = CryptoJS.HmacSHA256('', this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/commissionCommonInfo', {
-      method: 'GET',
-      headers: {'API-key': this.apiKey, 'Sign': sign}
-    }).then(res => {
-      return res.json();
-    });
+    return privateClient.getTradingFeeAndVolume();
   }
 
   /**
@@ -791,22 +721,6 @@ class LiveCoin {
     });
   }
 
-  /**
-   *  Returns whether a comes before or after b alphabetically
-   *  @param {string=} a - first string
-   *  @param {string=} b - second string
-   *  @return {number} whether a comes before or after b
-   */
-  _alphabeticalSort(a, b) {
-    return a.localeCompare(b);
-  }
-
-  /**
-   *  Return sorted parameter query strong for options object
-   */
-  _getParamString(options) {
-    return qs.stringify(options, {sort: this._alphabeticalSort});
-  }
 }
 
 module.exports = LiveCoin;
