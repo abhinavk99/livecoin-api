@@ -2,7 +2,10 @@
 
 const fetch = require('node-fetch');
 const qs = require('qs');
-const CryptoJS = require("crypto-js");
+const CryptoJS = require('crypto-js');
+
+const PublicData = require('./publicData');
+const publicClient = new PublicData();
 
 /** Class representing LiveCoin client */
 class LiveCoin {
@@ -46,12 +49,7 @@ class LiveCoin {
    *  client.getTicker('btc', 'usd').then(console.log).catch(console.error);
    */
   getTicker(ticker, pair) {
-    // Converts ticker to currency pair string needed for API call
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var base = this.excBase + '/ticker';
-    return fetch(`${base}?currencyPair=${currencyPair}`).then(res => {
-      return res.json();
-    });
+    return publicClient.getTicker(ticker, pair);
   }
 
   /**
@@ -61,9 +59,7 @@ class LiveCoin {
    *  client.getAllTickers().then(console.log).catch(console.error);
    */
   getAllTickers() {
-    return fetch(this.excBase + '/ticker').then(res => {
-      return res.json();
-    });
+    return publicClient.getAllTickers();
   }
 
   /**
@@ -79,11 +75,7 @@ class LiveCoin {
    *  client.getLastTrades('eth', 'btc', {minOrHr: true}).then(console.log);
    */
   getLastTrades(ticker, pair, options) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var base = this.excBase + '/last_trades?currencyPair=' + currencyPair;
-    return fetch(`${base}${options ? `&${qs.stringify(options)}` : ''}`).then(res => {
-      return res.json();
-    });
+    return publicClient.getLastTrades(ticker, pair, options);
   }
 
   /**
@@ -99,11 +91,7 @@ class LiveCoin {
    *  client.getOrders('eth', 'btc', {groupByPrice: true, depth: 4}).then(console.log);
    */
   getOrders(ticker, pair, options) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var base = this.excBase + '/order_book?currencyPair=' + currencyPair;
-    return fetch(`${base}${options ? `&${qs.stringify(options)}` : ''}`).then(res => {
-      return res.json();
-    });
+    return publicClient.getOrders(ticker, pair, options);
   }
 
   /**
@@ -117,10 +105,7 @@ class LiveCoin {
    *  client.getAllOrders({groupByPrice: true, depth: 4}).then(console.log);
    */
   getAllOrders(options) {
-    var base = this.excBase + '/all/order_book';
-    return fetch(`${base}${options ? `?${qs.stringify(options)}` : ''}`).then(res => {
-      return res.json();
-    });
+    return publicClient.getAllOrders(options);
   }
 
   /**
@@ -132,11 +117,7 @@ class LiveCoin {
    *  client.getBidAndAsk('btc', 'usd').then(console.log).catch(console.error);
    */
   getBidAndAsk(ticker, pair) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var base = this.excBase + '/maxbid_minask';
-    return fetch(`${base}?currencyPair=${currencyPair}`).then(res => {
-      return res.json();
-    });
+    return publicClient.getBidAndAsk(ticker, pair);
   }
 
   /**
@@ -146,9 +127,7 @@ class LiveCoin {
    *  client.getAllBidsAndAsks().then(console.log).catch(console.error);
    */
   getAllBidsAndAsks() {
-    return fetch(this.excBase + '/maxbid_minask').then(res => {
-      return res.json();
-    });
+    return publicClient.getAllBidsAndAsks();
   }
 
   /**
@@ -158,9 +137,7 @@ class LiveCoin {
    *  client.getRestrictions().then(console.log).catch(console.error);
    */
   getRestrictions() {
-    return fetch(this.excBase + '/restrictions').then(res => {
-      return res.json();
-    });
+    return publicClient.getRestrictions();
   }
 
   /**
@@ -170,9 +147,7 @@ class LiveCoin {
    *  client.getCurrencies().then(console.log).catch(console.error);
    */
   getCurrencies() {
-    return fetch(this.baseUrl + '/info/coinInfo').then(res => {
-      return res.json();
-    });
+    return publicClient.getCurrencies();
   }
 
   /**

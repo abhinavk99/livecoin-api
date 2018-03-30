@@ -2,7 +2,7 @@
 
 const Config = require('./testConfig.json');
 var expect = require('chai').expect;
-const LiveCoin = require('../index');
+const LiveCoin = require('../src/index');
 
 describe('#LiveCoin Public Data', function() {
   it('should be defined', function() {
@@ -105,7 +105,6 @@ describe('#LiveCoin Public Data', function() {
     expect(info).to.be.an('object');
     expect(info['restrictions']).to.be.an('array');
     expect(info['restrictions'][0]).to.be.an('object');
-    expect(info['restrictions'][0]['currencyPair']).to.equal('BTC/USD');
     expect(info['restrictions'][0]['minLimitQuantity']).to.be.a('number');
     expect(info['restrictions'][0]['priceScale']).to.be.a('number');
   });

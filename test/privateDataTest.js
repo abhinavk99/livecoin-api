@@ -2,7 +2,7 @@
 
 const Config = require('./testConfig.json');
 var expect = require('chai').expect;
-const LiveCoin = require('../index');
+const LiveCoin = require('../src/index');
 const client = new LiveCoin(Config.key, Config.secret);
 
 describe('#LiveCoin Private Data', function() {
