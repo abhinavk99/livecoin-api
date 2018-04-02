@@ -1,7 +1,7 @@
 'use strict';
 
 const Config = require('./test/testConfig.json');
-const LiveCoin = require('./index');
+const LiveCoin = require('./src/index');
 const client = new LiveCoin(Config.key, Config.secret);
 
 // Public Data API calls
