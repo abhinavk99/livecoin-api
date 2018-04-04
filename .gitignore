@@ -1,3 +1,8 @@
+# Aptana related files
+node_modules
+.project
+*.project
+
 # Logs
 logs
 *.log
