@@ -9,6 +9,8 @@ const PublicData = require('./publicData');
 const publicClient = new PublicData();
 const PrivateData = require('./privateData');
 const privateClient = new PrivateData();
+const Orders = require('./orders');
+const ordersClient = new Orders();
 
 /** Class representing LiveCoin client */
 class LiveCoin {
@@ -23,7 +25,8 @@ class LiveCoin {
   constructor(apiKey = '', apiSecret = '') {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
-    privateClient.login(this.apiKey, this.apiSecret);
+    privateClient.login(apiKey, apiSecret);
+    ordersClient.login(apiKey, apiSecret);
 
     this.baseUrl = 'https://api.livecoin.net';
     this.excBase = this.baseUrl + '/exchange';
@@ -42,7 +45,8 @@ class LiveCoin {
   login(apiKey, apiSecret) {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
-    privateClient.login(this.apiKey, this.apiSecret);
+    privateClient.login(apiKey, apiSecret);
+    ordersClient.login(apiKey, apiSecret);
   }
 
   /**
@@ -281,22 +285,7 @@ class LiveCoin {
    *  client.buyLimit('btc', 'usd', 10000, 0.1).then(console.log);
    */
   buyLimit(ticker, pair, price, quantity) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var params = `currencyPair=${currencyPair}&price=${price}` 
-      + `&quantity=${quantity}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/buylimit?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return ordersClient.buyLimit(ticker, pair, price, quantity);
   }
 
   /**
@@ -310,22 +299,7 @@ class LiveCoin {
    *  client.sellLimit('btc', 'usd', 10000, 0.1).then(console.log);
    */
   sellLimit(ticker, pair, price, quantity) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var params = `currencyPair=${currencyPair}&price=${price}` 
-      + `&quantity=${quantity}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/selllimit?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return ordersClient.sellLimit(ticker, pair, price, quantity);
   }
 
   /**
@@ -338,21 +312,7 @@ class LiveCoin {
    *  client.buyMarket('btc', 'usd', 0.1).then(console.log);
    */
   buyMarket(ticker, pair, quantity) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var params = `currencyPair=${currencyPair}&quantity=${quantity}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/buymarket?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return ordersClient.buyMarket(ticker, pair, quantity);
   }
 
   /**
@@ -365,21 +325,7 @@ class LiveCoin {
    *  client.sellMarket('btc', 'usd', 0.1).then(console.log);
    */
   sellMarket(ticker, pair, quantity) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var params = `currencyPair=${currencyPair}&quantity=${quantity}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/sellmarket?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return ordersClient.sellMarket(ticker, pair, quantity);
   }
 
   /**
@@ -392,21 +338,7 @@ class LiveCoin {
    *  client.cancelLimit('btc', 'usd', 1111).then(console.log);
    */
   cancelLimit(ticker, pair, orderId) {
-    var currencyPair = (ticker + '/' + pair).toUpperCase();
-    var params = `currencyPair=${currencyPair}&orderId=${orderId}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.excBase + '/cancellimit?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return ordersClient.cancelLimit(ticker, pair, orderId);
   }
 
   /**
