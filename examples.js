@@ -119,7 +119,7 @@ client.toPerfectMoney(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 client.makeVoucher(1, 'usd', 'need a voucher')
 .then(console.log).catch(console.error);
 
-client.makeVoucher(1, 'usd', 'need a voucher')
+client.getVoucherAmount('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
 .then(console.log).catch(console.error);
 
 client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')

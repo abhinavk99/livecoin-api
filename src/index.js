@@ -11,6 +11,10 @@ const PrivateData = require('./privateData');
 const privateClient = new PrivateData();
 const Orders = require('./orders');
 const ordersClient = new Orders();
+const Transfers = require('./transfers');
+const transfersClient = new Transfers();
+const Vouchers = require('./vouchers');
+const vouchersClient = new Vouchers();
 
 /** Class representing LiveCoin client */
 class LiveCoin {
@@ -23,16 +27,7 @@ class LiveCoin {
    *  const client = new LiveCoin('key here', 'secret here');
    */
   constructor(apiKey = '', apiSecret = '') {
-    this.apiKey = apiKey;
-    this.apiSecret = apiSecret;
-    privateClient.login(apiKey, apiSecret);
-    ordersClient.login(apiKey, apiSecret);
-
-    this.baseUrl = 'https://api.livecoin.net';
-    this.excBase = this.baseUrl + '/exchange';
-    this.payBase = this.baseUrl + '/payment';
-    this.outBase = this.payBase + '/out';
-    this.vouBase = this.payBase + '/voucher';
+    this.login(apiKey, apiSecret);
   }
 
   /**
@@ -43,10 +38,10 @@ class LiveCoin {
    *  client.login('key here', 'secret here');
    */
   login(apiKey, apiSecret) {
-    this.apiKey = apiKey;
-    this.apiSecret = apiSecret;
     privateClient.login(apiKey, apiSecret);
     ordersClient.login(apiKey, apiSecret);
+    transfersClient.login(apiKey, apiSecret);
+    vouchersClient.login(apiKey, apiSecret);
   }
 
   /**
@@ -349,20 +344,7 @@ class LiveCoin {
    *  client.getAddress('btc').then(console.log);
    */
   getAddress(ticker) {
-    var params = `currency=${ticker.toUpperCase()}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/get/address?' + params, {
-      method: 'GET',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.getAddress(ticker);
   }
 
   /**
@@ -376,21 +358,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   withdraw(amount, ticker, wallet) {
-    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`
-      + `wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/coin?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.withdraw(amount, ticker, wallet);
   }
 
   /**
@@ -408,22 +376,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toPayeer(amount, ticker, wallet, options) {
-    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
-    params += options ? `&${this._getParamString(options)}` : '';
-    params += `&wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/payeer?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toPayeer(amount, ticker, wallet, options);
   }
 
   /**
@@ -437,21 +390,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toCapitalist(amount, currency, wallet) {
-    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
-    params += `&wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/capitalist?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toCapitalist(amount, currency, wallet);
   }
 
   /**
@@ -465,21 +404,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toAdvcash(amount, currency, wallet) {
-    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
-    params += `&wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/advcah?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toAdvcash(amount, currency, wallet);
   }
 
   /**
@@ -495,22 +420,8 @@ class LiveCoin {
    *  .then(console.log);
    */
   toBankCard(amount, currency, cardNumber, expiryMonth, expiryYear) {
-    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
-    params += `&card_number=${cardNumber}&expiry_month=${expiryMonth}`;
-    params += `&expiry_year=${expiryYear}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/card?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toBankCard(amount, currency, cardNumber, expiryMonth,
+      expiryYear);
   }
 
   /**
@@ -525,22 +436,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toOkpay(amount, currency, wallet, invoice = '') {
-    var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
-    params += invoice == '' ? '' : `&invoice=${invoice}`;
-    params += `&wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/okpay?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toOkpay(amount, currency, wallet, invoice);
   }
 
   /**
@@ -557,22 +453,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toPerfectMoney(amount, ticker, wallet, options) {
-    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
-    params += options ? `&${this._getParamString(options)}` : '';
-    params += `&wallet=${wallet}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/perfectmoney?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return transfersClient.toPerfectMoney(amount, ticker, wallet, options);
   }
 
   /**
@@ -586,21 +467,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   makeVoucher(amount, ticker, description = '') {
-    var params = `amount=${amount}&currency=${ticker.toUpperCase()}`;
-    params += `&description=${description}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.vouBase + '/make?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return vouchersClient.makeVoucher(amount, ticker, description);
   }
 
   /**
@@ -612,20 +479,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   getVoucherAmount(voucherCode) {
-    var params = `voucher_code=${voucherCode}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.vouBase + '/amount?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return vouchersClient.getVoucherAmount(voucherCode);
   }
 
   /**
@@ -637,20 +491,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   redeemVoucher(voucherCode) {
-    var params = `voucher_code=${voucherCode}`;
-    var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
-                .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.vouBase + '/redeem?' + params, {
-      method: 'POST',
-      headers: {
-        'API-key': this.apiKey,
-        'Sign': sign,
-        'Content-type': 'application/x-www-form-urlencoded'
-      },
-      body: params
-    }).then(res => {
-      return res.json();
-    });
+    return vouchersClient.redeemVoucher(voucherCode);
   }
 
 }
