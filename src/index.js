@@ -1,19 +1,16 @@
 'use strict';
 
-const fetch = require('node-fetch');
-const qs = require('qs');
-const CryptoJS = require('crypto-js');
-
 // Importing the sub-modules
-const PublicData = require('./publicData');
+const PublicData = require('./Methods/publicData');
+const PrivateData = require('./Methods/privateData');
+const Orders = require('./Methods/orders');
+const Transfers = require('./Methods/transfers');
+const Vouchers = require('./Methods/vouchers');
+
 const publicClient = new PublicData();
-const PrivateData = require('./privateData');
 const privateClient = new PrivateData();
-const Orders = require('./orders');
 const ordersClient = new Orders();
-const Transfers = require('./transfers');
 const transfersClient = new Transfers();
-const Vouchers = require('./vouchers');
 const vouchersClient = new Vouchers();
 
 /** Class representing LiveCoin client */

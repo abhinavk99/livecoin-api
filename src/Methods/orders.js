@@ -1,7 +1,6 @@
 'use strict';
 
 const fetch = require('node-fetch');
-const qs = require('qs');
 const CryptoJS = require('crypto-js');
 
 class Orders {

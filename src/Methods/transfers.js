@@ -1,9 +1,8 @@
 'use strict';
 
 const fetch = require('node-fetch');
-const qs = require('qs');
 const CryptoJS = require('crypto-js');
-const getParamString = require('./paramHelper');
+const getParamString = require('../paramHelper');
 
 class Transfers {
 
