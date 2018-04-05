@@ -99,3 +99,28 @@ client.toPayeer(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG', {
   protect: 1,
   protect_period: 3
 }).then(console.log).catch(console.error);
+
+client.toCapitalist(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+.then(console.log).catch(console.error);
+
+client.toAdvcash(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+.then(console.log).catch(console.error);
+
+client.toBankCard(1, 'usd', '5567025017512543', '09', '18')
+.then(console.log).catch(console.error);
+
+client.toOkpay(1, 'USD', 'OK123456789').then(console.log).catch(console.error);
+
+client.toPerfectMoney(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
+.then(console.log).catch(console.error);
+
+// Vouchers API calls
+
+client.makeVoucher(1, 'usd', 'need a voucher')
+.then(console.log).catch(console.error);
+
+client.makeVoucher(1, 'usd', 'need a voucher')
+.then(console.log).catch(console.error);
+
+client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
+.then(console.log).catch(console.error);
