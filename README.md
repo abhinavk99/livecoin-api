@@ -67,8 +67,6 @@ See examples.js for more examples.
     -   [makeVoucher](#makevoucher)
     -   [getVoucherAmount](#getvoucheramount)
     -   [redeemVoucher](#redeemvoucher)
-    -   [\_alphabeticalSort](#_alphabeticalsort)
-    -   [\_getParamString](#_getparamstring)
 
 ### LiveCoin
 
@@ -694,25 +692,6 @@ client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on voucher redeeming
-
-#### \_alphabeticalSort
-
-Returns whether a comes before or after b alphabetically
-
-**Parameters**
-
--   `a` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** first string
--   `b` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** second string
-
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** whether a comes before or after b
-
-#### \_getParamString
-
-Return sorted parameter query strong for options object
-
-**Parameters**
-
--   `options`  
 
 ## Contributing
 
