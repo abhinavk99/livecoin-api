@@ -59,7 +59,7 @@ class PrivateData {
     var curr = currency.length > 0 ? 'currency=' + currency.toUpperCase() : '';
     var sign = CryptoJS.HmacSHA256(curr, this.apiSecret)
       .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.payBase + '/balances?currency=' + currency, {
+    return fetch(this.payBase + '/balances?'+curr, {
       method: 'GET',
       headers: { 'API-key': this.apiKey, 'Sign': sign }
     }).then(res => {
