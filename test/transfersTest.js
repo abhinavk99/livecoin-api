@@ -52,7 +52,7 @@ describe('#LiveCoin Transfers', function () {
 
   it('should transfer to bank card', async function () {
     var info = await client.toBankCard(1, 'usd',
-      '5567025017512543', '09', '18');
+      '5567025017512543');
     expect(info).to.be.an('object');
   });
 

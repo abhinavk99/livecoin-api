@@ -420,17 +420,14 @@ class LiveCoin {
    *  Withdraw to bank card
    *  @param {number} amount - amount to withdraw
    *  @param {string} currency - can be USD, EUR, or RUR only
-   *  @param {number} cardNumber - bank card number
-   *  @param {string} expiryMonth - '01' to '12'
-   *  @param {string} expiryYear - last 2 digits, e.g. '18'
+   *  @param {string} account - bank account number
    *  @return {Object} information on withdrawal
    *  @example
    *  client.toBankCard(1, 'USD', '5567025017512543', '09', '18')
    *  .then(console.log);
    */
-  toBankCard(amount, currency, cardNumber, expiryMonth, expiryYear) {
-    return this.transfersClient.toBankCard(amount, currency, cardNumber, expiryMonth,
-      expiryYear);
+  toBankCard(amount, currency, account) {
+    return this.transfersClient.toBankCard(amount, currency, account);
   }
 
   /**

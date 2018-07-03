@@ -106,7 +106,7 @@ client.toCapitalist(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 client.toAdvcash(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 .then(console.log).catch(console.error);
 
-client.toBankCard(1, 'usd', '5567025017512543', '09', '18')
+client.toBankCard(1, 'usd', '5567025017512543')
 .then(console.log).catch(console.error);
 
 client.toOkpay(1, 'USD', 'OK123456789').then(console.log).catch(console.error);

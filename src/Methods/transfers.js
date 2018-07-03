@@ -97,7 +97,7 @@ class Transfers {
     params += `&wallet=${wallet}`;
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
       .toString(CryptoJS.enc.Hex).toUpperCase();
-    return fetch(this.outBase + '/advcah?' + params, {
+    return fetch(this.outBase + '/advcash?' + params, {
       method: 'POST',
       headers: {
         'API-key': this.apiKey,
@@ -110,10 +110,9 @@ class Transfers {
     });
   }
 
-  toBankCard(amount, currency, cardNumber, expiryMonth, expiryYear) {
+  toBankCard(amount, currency, account) {
     var params = `amount=${amount}&currency=${currency.toUpperCase()}`;
-    params += `&card_number=${cardNumber}&expiry_month=${expiryMonth}`;
-    params += `&expiry_year=${expiryYear}`;
+    params += `&account=${account}`;
     var sign = CryptoJS.HmacSHA256(params, this.apiSecret)
       .toString(CryptoJS.enc.Hex).toUpperCase();
     return fetch(this.outBase + '/card?' + params, {

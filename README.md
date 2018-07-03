@@ -67,6 +67,7 @@ See examples.js for more examples.
     -   [makeVoucher](#makevoucher)
     -   [getVoucherAmount](#getvoucheramount)
     -   [redeemVoucher](#redeemvoucher)
+-   [getParamString](#getparamstring)
 
 ### LiveCoin
 
@@ -585,9 +586,7 @@ Withdraw to bank card
 
 -   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
 -   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD, EUR, or RUR only
--   `cardNumber` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** bank card number
--   `expiryMonth` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** '01' to '12'
--   `expiryYear` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** last 2 digits, e.g. '18'
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** bank account number
 
 **Examples**
 
@@ -692,6 +691,14 @@ client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on voucher redeeming
+
+### getParamString
+
+Return sorted parameter query string for options object
+
+**Parameters**
+
+-   `options`  
 
 ## Contributing
 
