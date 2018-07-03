@@ -24,7 +24,7 @@ describe('#LiveCoin Private Data', function() {
       orderDesc: true,
       limit: 4
     });
-    expect(info).to.be.an('object');
+    expect(info).to.be.an('array');
   });
   
   it('should get client orders', async function() {
@@ -51,7 +51,7 @@ describe('#LiveCoin Private Data', function() {
   });
 
   it('should get transactions', async function() {
-    var info = await client.getTransactions('1409920436000', '1409920636000', {
+    var info = await client.getTransactions('1530601123000', '1530601146000', {
       types: 'BUY',
       limit: 2
     });
@@ -59,7 +59,7 @@ describe('#LiveCoin Private Data', function() {
   });
 
   it('should get number of transactions', async function() {
-    var info = await client.getNumTransactions('1409920436000', '1409920636000', 'BUY');
+    var info = await client.getNumTransactions('1530601123000', '1530601146000', 'BUY');
     expect(info).to.be.a('number');
   });
 

@@ -58,12 +58,12 @@ client.getBalances('BTC')
 client.getBalance('BTC')
 .then(console.log).catch(console.error);
 
-client.getTransactions('1409920436000', '1409920636000', {
+client.getTransactions('1527810400000', '1527810401000', {
   types: 'BUY',
   limit: 2
 }).then(console.log).catch(console.error);
 
-client.getNumTransactions('1409920436000', '1409920636000', 'BUY')
+client.getNumTransactions('1527810400000', '1527810401000', 'BUY')
 .then(console.log).catch(console.error);
 
 client.getTradingFee().then(console.log).catch(console.error);

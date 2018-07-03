@@ -1,17 +1,10 @@
 'use strict';
 
-// Importing the sub-modules
-const PublicData = require('./Methods/publicData');
-const PrivateData = require('./Methods/privateData');
+const RequestHandler = require('./requestHandler');
+
 const Orders = require('./Methods/orders');
 const Transfers = require('./Methods/transfers');
 const Vouchers = require('./Methods/vouchers');
-
-const publicClient = new PublicData();
-const privateClient = new PrivateData();
-const ordersClient = new Orders();
-const transfersClient = new Transfers();
-const vouchersClient = new Vouchers();
 
 /** Class representing LiveCoin client */
 class LiveCoin {
@@ -24,6 +17,10 @@ class LiveCoin {
    *  const client = new LiveCoin('key here', 'secret here');
    */
   constructor(apiKey = '', apiSecret = '') {
+    this.handler = new RequestHandler(apiKey, apiSecret);
+    this.ordersClient = new Orders(apiKey, apiSecret);
+    this.transfersClient = new Transfers(apiKey, apiSecret);
+    this.vouchersClient = new Vouchers(apiKey, apiSecret);
     this.login(apiKey, apiSecret);
   }
 
@@ -35,10 +32,10 @@ class LiveCoin {
    *  client.login('key here', 'secret here');
    */
   login(apiKey, apiSecret) {
-    privateClient.login(apiKey, apiSecret);
-    ordersClient.login(apiKey, apiSecret);
-    transfersClient.login(apiKey, apiSecret);
-    vouchersClient.login(apiKey, apiSecret);
+    this.handler.login(apiKey, apiSecret);
+    this.ordersClient.login(apiKey, apiSecret);
+    this.transfersClient.login(apiKey, apiSecret);
+    this.vouchersClient.login(apiKey, apiSecret);
   }
 
   /**
@@ -50,7 +47,8 @@ class LiveCoin {
    *  client.getTicker('btc', 'usd').then(console.log).catch(console.error);
    */
   getTicker(ticker, pair) {
-    return publicClient.getTicker(ticker, pair);
+    let options = { currencyPair: `${ticker}/${pair}`.toUpperCase() };
+    return this.handler.request('exchange/ticker', options, 'GET', false);
   }
 
   /**
@@ -60,7 +58,7 @@ class LiveCoin {
    *  client.getAllTickers().then(console.log).catch(console.error);
    */
   getAllTickers() {
-    return publicClient.getAllTickers();
+    return this.handler.request('exchange/ticker', {}, 'GET', false);
   }
 
   /**
@@ -76,7 +74,8 @@ class LiveCoin {
    *  client.getLastTrades('eth', 'btc', {minOrHr: true}).then(console.log);
    */
   getLastTrades(ticker, pair, options) {
-    return publicClient.getLastTrades(ticker, pair, options);
+    options.currencyPair = `${ticker}/${pair}`.toUpperCase();
+    return this.handler.request('exchange/last_trades', options, 'GET', false);
   }
 
   /**
@@ -92,7 +91,8 @@ class LiveCoin {
    *  client.getOrders('eth', 'btc', {groupByPrice: true, depth: 4}).then(console.log);
    */
   getOrders(ticker, pair, options) {
-    return publicClient.getOrders(ticker, pair, options);
+    options.currencyPair = `${ticker}/${pair}`.toUpperCase();
+    return this.handler.request('exchange/order_book', options, 'GET', false);
   }
 
   /**
@@ -106,7 +106,7 @@ class LiveCoin {
    *  client.getAllOrders({groupByPrice: true, depth: 4}).then(console.log);
    */
   getAllOrders(options) {
-    return publicClient.getAllOrders(options);
+    return this.handler.request('exchange/all/order_book', options, 'GET', false);
   }
 
   /**
@@ -118,7 +118,8 @@ class LiveCoin {
    *  client.getBidAndAsk('btc', 'usd').then(console.log).catch(console.error);
    */
   getBidAndAsk(ticker, pair) {
-    return publicClient.getBidAndAsk(ticker, pair);
+    let params = { currencyPair: `${ticker}/${pair}`.toUpperCase() };
+    return this.handler.request('exchange/maxbid_minask', params, 'GET', false);
   }
 
   /**
@@ -128,7 +129,7 @@ class LiveCoin {
    *  client.getAllBidsAndAsks().then(console.log).catch(console.error);
    */
   getAllBidsAndAsks() {
-    return publicClient.getAllBidsAndAsks();
+    return this.handler.request('exchange/maxbid_minask', {}, 'GET', false);
   }
 
   /**
@@ -138,7 +139,7 @@ class LiveCoin {
    *  client.getRestrictions().then(console.log).catch(console.error);
    */
   getRestrictions() {
-    return publicClient.getRestrictions();
+    return this.handler.request('exchange/restrictions', {}, 'GET', false);
   }
 
   /**
@@ -148,7 +149,7 @@ class LiveCoin {
    *  client.getCurrencies().then(console.log).catch(console.error);
    */
   getCurrencies() {
-    return publicClient.getCurrencies();
+    return this.handler.request('info/coinInfo', {}, 'GET', false);
   }
 
   /**
@@ -163,7 +164,7 @@ class LiveCoin {
    *  client.getUserTrades({orderDesc: true, limit: 4}).then(console.log);
    */
   getUserTrades(options) {
-    return privateClient.getUserTrades();
+    return this.handler.request('exchange/trades', options, 'GET');
   }
 
   /**
@@ -180,7 +181,7 @@ class LiveCoin {
    *  client.getClientOrders({openClosed: 'CANCELLED', startRow: 2}).then(console.log);
    */
   getClientOrders(options) {
-    return privateClient.getClientOrders(options);
+    return this.handler.request('exchange/client_orders', options, 'GET');
   }
 
   /**
@@ -191,7 +192,8 @@ class LiveCoin {
    *  client.getUserOrder(88504958).then(console.log).catch(console.error);
    */
   getUserOrder(orderId) {
-    return privateClient.getUserOrder(orderId);
+    let options = { orderId: orderId };
+    return this.handler.request('exchange/order', options, 'GET');
   }
 
   /**
@@ -202,7 +204,10 @@ class LiveCoin {
    *  client.getBalances().then(console.log).catch(console.error);
    */
   getBalances(currency = '') {
-    return privateClient.getBalances(currency);
+    let options = {};
+    if (currency !== '')
+      options.currency = currency.toUpperCase();
+    return this.handler.request('payment/balances', options, 'GET');
   }
 
   /**
@@ -213,7 +218,8 @@ class LiveCoin {
    *  client.getBalance('BTC').then(console.log).catch(console.error);
    */
   getBalance(currency) {
-    return privateClient.getBalance(currency);
+    let options = { currency: currency.toUpperCase() };
+    return this.handler.request('payment/balance', options, 'GET');
   }
 
   /**
@@ -230,7 +236,9 @@ class LiveCoin {
    *  {types: 'BUY', limit: 2}).then(console.log).catch(console.error);
    */
   getTransactions(start, end, options) {
-    return privateClient.getTransactions(start, end, options);
+    options.start = start;
+    options.end = end;
+    return this.handler.request('payment/history/transactions', options, 'GET');
   }
 
   /**
@@ -243,7 +251,11 @@ class LiveCoin {
    *  client.getNumTransactions('1409920436000', '1409920636000', 'BUY').then(console.log);
    */
   getNumTransactions(start, end, types) {
-    return privateClient.getNumTransactions(start, end, types);
+    let options = { start: start, end: end };
+    if (types) {
+      options.types = types;
+    }
+    return this.handler.request('payment/history/size', options, 'GET');
   }
 
   /**
@@ -253,7 +265,7 @@ class LiveCoin {
    *  client.getTradingFee().then(console.log).catch(console.error);
    */
   getTradingFee() {
-    return privateClient.getTradingFee();
+    return this.handler.request('exchange/commission', {}, 'GET');
   }
 
   /**
@@ -263,7 +275,7 @@ class LiveCoin {
    *  client.getTradingFeeAndVolume().then(console.log).catch(console.error);
    */
   getTradingFeeAndVolume() {
-    return privateClient.getTradingFeeAndVolume();
+    return this.handler.request('exchange/commissionCommonInfo', {}, 'GET');
   }
 
   /**
@@ -277,7 +289,7 @@ class LiveCoin {
    *  client.buyLimit('btc', 'usd', 10000, 0.1).then(console.log);
    */
   buyLimit(ticker, pair, price, quantity) {
-    return ordersClient.buyLimit(ticker, pair, price, quantity);
+    return this.ordersClient.buyLimit(ticker, pair, price, quantity);
   }
 
   /**
@@ -291,7 +303,7 @@ class LiveCoin {
    *  client.sellLimit('btc', 'usd', 10000, 0.1).then(console.log);
    */
   sellLimit(ticker, pair, price, quantity) {
-    return ordersClient.sellLimit(ticker, pair, price, quantity);
+    return this.ordersClient.sellLimit(ticker, pair, price, quantity);
   }
 
   /**
@@ -304,7 +316,7 @@ class LiveCoin {
    *  client.buyMarket('btc', 'usd', 0.1).then(console.log);
    */
   buyMarket(ticker, pair, quantity) {
-    return ordersClient.buyMarket(ticker, pair, quantity);
+    return this.ordersClient.buyMarket(ticker, pair, quantity);
   }
 
   /**
@@ -317,7 +329,7 @@ class LiveCoin {
    *  client.sellMarket('btc', 'usd', 0.1).then(console.log);
    */
   sellMarket(ticker, pair, quantity) {
-    return ordersClient.sellMarket(ticker, pair, quantity);
+    return this.ordersClient.sellMarket(ticker, pair, quantity);
   }
 
   /**
@@ -330,7 +342,7 @@ class LiveCoin {
    *  client.cancelLimit('btc', 'usd', 1111).then(console.log);
    */
   cancelLimit(ticker, pair, orderId) {
-    return ordersClient.cancelLimit(ticker, pair, orderId);
+    return this.ordersClient.cancelLimit(ticker, pair, orderId);
   }
 
   /**
@@ -341,7 +353,7 @@ class LiveCoin {
    *  client.getAddress('btc').then(console.log);
    */
   getAddress(ticker) {
-    return transfersClient.getAddress(ticker);
+    return this.transfersClient.getAddress(ticker);
   }
 
   /**
@@ -355,7 +367,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   withdraw(amount, ticker, wallet) {
-    return transfersClient.withdraw(amount, ticker, wallet);
+    return this.transfersClient.withdraw(amount, ticker, wallet);
   }
 
   /**
@@ -373,7 +385,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toPayeer(amount, ticker, wallet, options) {
-    return transfersClient.toPayeer(amount, ticker, wallet, options);
+    return this.transfersClient.toPayeer(amount, ticker, wallet, options);
   }
 
   /**
@@ -387,7 +399,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toCapitalist(amount, currency, wallet) {
-    return transfersClient.toCapitalist(amount, currency, wallet);
+    return this.transfersClient.toCapitalist(amount, currency, wallet);
   }
 
   /**
@@ -401,7 +413,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toAdvcash(amount, currency, wallet) {
-    return transfersClient.toAdvcash(amount, currency, wallet);
+    return this.transfersClient.toAdvcash(amount, currency, wallet);
   }
 
   /**
@@ -417,7 +429,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toBankCard(amount, currency, cardNumber, expiryMonth, expiryYear) {
-    return transfersClient.toBankCard(amount, currency, cardNumber, expiryMonth,
+    return this.transfersClient.toBankCard(amount, currency, cardNumber, expiryMonth,
       expiryYear);
   }
 
@@ -433,7 +445,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toOkpay(amount, currency, wallet, invoice = '') {
-    return transfersClient.toOkpay(amount, currency, wallet, invoice);
+    return this.transfersClient.toOkpay(amount, currency, wallet, invoice);
   }
 
   /**
@@ -450,7 +462,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   toPerfectMoney(amount, ticker, wallet, options) {
-    return transfersClient.toPerfectMoney(amount, ticker, wallet, options);
+    return this.transfersClient.toPerfectMoney(amount, ticker, wallet, options);
   }
 
   /**
@@ -464,7 +476,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   makeVoucher(amount, ticker, description = '') {
-    return vouchersClient.makeVoucher(amount, ticker, description);
+    return this.vouchersClient.makeVoucher(amount, ticker, description);
   }
 
   /**
@@ -476,7 +488,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   getVoucherAmount(voucherCode) {
-    return vouchersClient.getVoucherAmount(voucherCode);
+    return this.vouchersClient.getVoucherAmount(voucherCode);
   }
 
   /**
@@ -488,7 +500,7 @@ class LiveCoin {
    *  .then(console.log);
    */
   redeemVoucher(voucherCode) {
-    return vouchersClient.redeemVoucher(voucherCode);
+    return this.vouchersClient.redeemVoucher(voucherCode);
   }
 
 }

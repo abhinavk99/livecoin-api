@@ -118,7 +118,7 @@ describe('#LiveCoin Public Data', function() {
     expect(info['info'][0]['name']).to.equal('Bitcoin');
     expect(info['info'][0]['symbol']).to.equal('BTC');
     expect(info['info'][0]['walletStatus']).to.equal('normal');
-    expect(info['info'][0]['withdrawFee']).to.equal(0.001);
+    expect(info['info'][0]['withdrawFee']).to.equal(0.0005);
     expect(info['info'][0]['difficulty']).to.be.a('number');
     expect(info['info'][0]['minDepositAmount']).to.equal(0);
     expect(info['info'][0]['minWithdrawAmount']).to.equal(' 0.002');
