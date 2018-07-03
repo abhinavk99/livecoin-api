@@ -16,13 +16,13 @@ class RequestHandler {
     this.apiSecret = apiSecret;
   }
 
-  request(endpoint, params, method, needsEncryption = true) {
+  request(endpoint, params, method, needsAuthorization = true) {
     return new Promise((resolve, reject) => {
       let queryString = getParamString(params);
       let requestInfo = {
         method: method
       };
-      if (needsEncryption) {
+      if (needsAuthorization) {
         let sign = CryptoJS.HmacSHA256(queryString, this.apiSecret)
           .toString(CryptoJS.enc.Hex).toUpperCase();
         let headers = {
