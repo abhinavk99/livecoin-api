@@ -760,3 +760,29 @@ Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 ## Contributing
 
 Contributions welcome!
+
+```shell
+# 1. Fork the repo and clone it to your computer
+$ git clone https://github.com/your-username/livecoin-api.git
+$ cd livecoin-api
+
+# 2. Connect your fork with this repo to stay up to date on any changes
+$ git remote add upstream https://github.com/abhinavk99/livecoin-api.git
+
+# 3. Make your feature branch
+$ git checkout -b new-feature
+
+# 4. Test your changes
+$ npm test
+
+# 5. Add and commit the changes you made
+$ git add .
+$ git commit -m "Added new feature"
+
+# 6. Push to your branch
+$ git push origin new-feature
+
+# 7. Create a pull request on GitHub
+```
+
+Alternatively, feel free to open [an issue](https://github.com/abhinavk99/livecoin-api/issues).
