@@ -106,7 +106,17 @@ client.toCapitalist(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 client.toAdvcash(1, 'usd', '1MfTTxGnBBgvyk9477hWurosfqj8MZKkAG')
 .then(console.log).catch(console.error);
 
+client.toYandex(1, 'RUR', '410011234567890')
+.then(console.log).catch(console.error);
+
+client.toQiwi(1, 'RUR', '79036660099')
+.then(console.log).catch(console.error);
+
 client.toBankCard(1, 'usd', '5567025017512543')
+.then(console.log).catch(console.error);
+
+client.toMastercard(1, 'USD', '1234123412341234',
+  'John Smith', 'US', 'Dallas', '1968-05-15', '79036660099')
 .then(console.log).catch(console.error);
 
 client.toOkpay(1, 'USD', 'OK123456789').then(console.log).catch(console.error);

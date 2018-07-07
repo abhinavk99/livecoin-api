@@ -50,9 +50,27 @@ describe('#LiveCoin Transfers', function () {
     expect(info).to.be.an('object');
   });
 
+  it('should transfer to Yandex', async function () {
+    var info = await client.toAdvcash(1, 'rur',
+      '410011234567890');
+    expect(info).to.be.an('object');
+  });
+
+  it('should transfer to Qiwi', async function () {
+    var info = await client.toAdvcash(1, 'rur',
+      '79036660099');
+    expect(info).to.be.an('object');
+  });
+
   it('should transfer to bank card', async function () {
     var info = await client.toBankCard(1, 'usd',
       '5567025017512543');
+    expect(info).to.be.an('object');
+  });
+
+  it('should transfer to Mastercard card', async function () {
+    var info = await client.toMastercard(1, 'USD', '1234123412341234',
+      'John Smith', 'US', 'Dallas', '1968-05-15', '79036660099');
     expect(info).to.be.an('object');
   });
 

@@ -61,13 +61,15 @@ See examples.js for more examples.
     -   [toPayeer](#topayeer)
     -   [toCapitalist](#tocapitalist)
     -   [toAdvcash](#toadvcash)
+    -   [toYandex](#toyandex)
+    -   [toQiwi](#toqiwi)
     -   [toBankCard](#tobankcard)
+    -   [toMastercard](#tomastercard)
     -   [toOkpay](#tookpay)
     -   [toPerfectMoney](#toperfectmoney)
     -   [makeVoucher](#makevoucher)
     -   [getVoucherAmount](#getvoucheramount)
     -   [redeemVoucher](#redeemvoucher)
--   [getParamString](#getparamstring)
 
 ### LiveCoin
 
@@ -130,7 +132,7 @@ Get information on most recent trades
 
 -   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
 -   `pair` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency being traded with
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.minOrHr` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** if true, info from minute, else hour
     -   `options.type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** must be either BUY or SELL
 
@@ -151,7 +153,7 @@ Get information on orders
 
 -   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
 -   `pair` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency being traded with
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.groupByPrice` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** if true, groups by price
     -   `options.depth` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** maximum number of orders to return
 
@@ -170,7 +172,7 @@ Get information on orders for all exchanges
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.groupByPrice` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** if true, groups by price
     -   `options.depth` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** maximum number of orders to return
 
@@ -242,7 +244,7 @@ Get information on user's recent trades, requires API key and secret
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.currencyPair` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** exchange in the format BTC/USD
     -   `options.orderDesc` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** if true, new orders will be shown first
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** number of items per page
@@ -262,7 +264,7 @@ Get information on user's orders, requires API key and secret
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.currencyPair` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** exchange in the format BTC/USD
     -   `options.openClosed` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** type of order, e.g 'ALL' or 'OPEN'
     -   `options.issuedFrom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** start date in UNIX format
@@ -334,7 +336,7 @@ Get list of transactions, requires API key and secret
 
 -   `start` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** start date in UNIX format
 -   `end` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** end date in UNIX format
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options for the query (optional, default `{}`)
     -   `options.types` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** type of order, e.g 'BUY' or 'DEPOSIT'
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** max number of results
     -   `options.offset` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** first index
@@ -526,7 +528,7 @@ Withdraw to Payeer account
 -   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
 -   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object (optional, default `{}`)
     -   `options.protect` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protection of payment
     -   `options.protect_code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protect code
     -   `options.protect_period` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** protect period in days
@@ -578,6 +580,44 @@ client.toAdvcash(1, 'USD', 'U123456789012')
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
 
+#### toYandex
+
+Withdraw to Yandex account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be RUR only
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
+
+**Examples**
+
+```javascript
+client.toYandex(1, 'RUR', '410011234567890')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toQiwi
+
+Withdraw to Qiwi account
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be RUR only
+-   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address including country code without '+'
+
+**Examples**
+
+```javascript
+client.toQiwi(1, 'RUR', '79036660099')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
 #### toBankCard
 
 Withdraw to bank card
@@ -592,6 +632,31 @@ Withdraw to bank card
 
 ```javascript
 client.toBankCard(1, 'USD', '5567025017512543', '09', '18')
+ .then(console.log);
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on withdrawal
+
+#### toMastercard
+
+Withdraw to Mastercard card
+
+**Parameters**
+
+-   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
+-   `currency` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** can be USD or EUR only
+-   `cardNumber` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Card number
+-   `cardHolder` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cardholder name
+-   `cardHolderCountry` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cardholder country in ISO 3166-1 alpha-2 format (e.g. RU)
+-   `cardHolderCity` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cardholder city
+-   `cardHolderDOB` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cardholder DOB in YYYY-MM-DD format
+-   `cardHolderMobilePhone` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Cardholder phone number including country code without '+'
+
+**Examples**
+
+```javascript
+client.toMastercard(1, 'USD', '1234123412341234',
+   'John Smith', 'US', 'Dallas', '1968-05-15', '79036660099')
  .then(console.log);
 ```
 
@@ -626,7 +691,7 @@ Withdraw to PerfectMoney account
 -   `amount` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** amount to withdraw
 -   `ticker` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** currency ticker
 -   `wallet` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** wallet address
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** options object (optional, default `{}`)
     -   `options.protect_code` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** protect code
     -   `options.protect_period` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** protect period in days
 
@@ -691,14 +756,6 @@ client.redeemVoucher('LVC-USD-12345678-87654321-ABCDEFGI-ABCD1234')
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** information on voucher redeeming
-
-### getParamString
-
-Return sorted parameter query string for options object
-
-**Parameters**
-
--   `options`  
 
 ## Contributing
 

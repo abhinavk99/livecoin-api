@@ -448,6 +448,44 @@ class LiveCoin {
   }
 
   /**
+   *  Withdraw to Yandex account
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be RUR only
+   *  @param {string} wallet - wallet address
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toYandex(1, 'RUR', '410011234567890')
+   *  .then(console.log);
+   */
+  toYandex(amount, currency, wallet) {
+    let options = {
+      amount: amount,
+      currency: currency.toUpperCase(),
+      wallet: wallet
+    };
+    return this.handler.request('payment/out/yandex', options, 'POST');
+  }
+
+  /**
+ *  Withdraw to Qiwi account
+ *  @param {number} amount - amount to withdraw
+ *  @param {string} currency - can be RUR only
+ *  @param {string} wallet - wallet address including country code without '+'
+ *  @return {Object} information on withdrawal
+ *  @example
+ *  client.toQiwi(1, 'RUR', '79036660099')
+ *  .then(console.log);
+ */
+  toQiwi(amount, currency, wallet) {
+    let options = {
+      amount: amount,
+      currency: currency.toUpperCase(),
+      wallet: wallet
+    };
+    return this.handler.request('payment/out/qiwi', options, 'POST');
+  }
+
+  /**
    *  Withdraw to bank card
    *  @param {number} amount - amount to withdraw
    *  @param {string} currency - can be USD, EUR, or RUR only
@@ -464,6 +502,37 @@ class LiveCoin {
       account: account
     };
     return this.handler.request('payment/out/card', options, 'POST');
+  }
+
+  /**
+   *  Withdraw to Mastercard card
+   *  @param {number} amount - amount to withdraw
+   *  @param {string} currency - can be USD or EUR only
+   *  @param {string} cardNumber - Card number
+   *  @param {string} cardHolder - Cardholder name
+   *  @param {string} cardHolderCountry - Cardholder country in ISO 3166-1 alpha-2 format (e.g. RU)
+   *  @param {string} cardHolderCity - Cardholder city
+   *  @param {string} cardHolderDOB - Cardholder DOB in YYYY-MM-DD format
+   *  @param {string} cardHolderMobilePhone - Cardholder phone number including country code without '+'
+   *  @return {Object} information on withdrawal
+   *  @example
+   *  client.toMastercard(1, 'USD', '1234123412341234',
+   *    'John Smith', 'US', 'Dallas', '1968-05-15', '79036660099')
+   *  .then(console.log);
+   */
+  toMastercard(amount, currency, cardNumber, cardHolder, cardHolderCountry,
+      cardHolderCity, cardHolderDOB, cardHolderMobilePhone) {
+    let options = {
+      amount: amount,
+      currency: currency.toUpperCase(),
+      cardNumber: cardNumber,
+      cardHolder: cardHolder,
+      cardHolderCountry: cardHolderCountry,
+      cardHolderCity: cardHolderCity,
+      cardHolderDOB: cardHolderDOB,
+      cardHolderMobilePhone: cardHolderMobilePhone
+    };
+    return this.handler.request('payment/out/mastercard', options, 'POST');
   }
 
   /**
