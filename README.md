@@ -8,6 +8,9 @@ LiveCoin API documentation can be found at <https://www.livecoin.net/api/common>
 
   `npm install livecoin-api`
 
+Go to <https:://www.livecoin.net> and make an account. On <https:://www.livecoin.net/api>,
+you will be able to get an API key and secret.
+
 ## Usage
 
 ```js
@@ -19,7 +22,7 @@ client.getAllTickers().then(console.log).catch(console.error);
 client.getCurrencies().then(console.log).catch(console.error);
 ```
 
-See examples.js for more examples.
+See the examples directory for more examples.
 
 ## Tests
 
