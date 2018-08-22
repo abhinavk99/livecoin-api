@@ -8,7 +8,7 @@ LiveCoin API documentation can be found at <https://www.livecoin.net/api/common>
 
   `npm install livecoin-api`
 
-Go to <https:://www.livecoin.net> and make an account. On <https:://www.livecoin.net/api>,
+Go to <https://www.livecoin.net> and make an account. On <https://www.livecoin.net/api>,
 you will be able to get an API key and secret.
 
 ## Usage
