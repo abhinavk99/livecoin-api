@@ -1,5 +1,9 @@
 # livecoin-api
 
+[![npm](https://img.shields.io/npm/v/livecoin-api.svg?style=flat-square)](https://www.npmjs.com/package/livecoin-api) [![npm downloads](https://img.shields.io/npm/dt/livecoin-api.svg?maxAge=3600&style=flat-square)](https://www.npmjs.com/package/livecoin-api) [![Dependencies](https://img.shields.io/david/abhinavk99/livecoin-api.svg?maxAge=3600&style=flat-square)](https://david-dm.org/abhinavk99/livecoin-api) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+[![https://nodei.co/npm/livecoin-api.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/livecoin-api.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/livecoin-api)
+
 Simple LiveCoin API wrapper for Node.js
 
 LiveCoin API documentation can be found at <https://www.livecoin.net/api/common>
