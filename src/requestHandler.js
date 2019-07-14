@@ -34,7 +34,11 @@ class RequestHandler {
         if (method === 'POST')
           requestInfo.body = queryString;
       }
-      fetch(`${this.baseUrl}/${endpoint}?${queryString}`, requestInfo)
+      let uri = method === 'POST'
+        ? `${this.baseUrl}/${endpoint}`
+        : `${this.baseUrl}/${endpoint}?${queryString}`;
+
+      fetch(uri, requestInfo)
         .then(res => resolve(res.json()))
         .catch(err => reject(err));
     });
